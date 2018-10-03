@@ -1,9 +1,11 @@
-function Column(name) {
+function Column(id, name) {
 	var self = this;
 	
-	this.id = randomString();
-	this.name = name;
+	this.id = id;
+    this.name = name || 'No name given';
 	this.element = createColumn();
+
+
 
 	function createColumn() {
 		// TWORZENIE NOWYCH WĘZŁÓW
@@ -19,8 +21,19 @@ function Column(name) {
 		});
 		
 		columnAddCard.click(function(event) {
+			var cardName = prompt("Enter the name of the card");
 			event.preventDefault();
-			self.createCard(new Card(prompt("Wpisz nazwę karty")));
+			$.ajax({
+		        url: baseUrl + '/card',
+		        method: 'POST',
+		        data: {
+		              //body query
+		        },
+		        success: function() {
+		            var card = new Card(response.id, cardName);
+        			self.createCard(card);
+		        }
+		    });
 		});
 			
 			// KONSTRUOWANIE ELEMENTU KOLUMNY
@@ -36,6 +49,13 @@ Column.prototype = {
 	  this.element.children('ul').append(card.element);
 	},
 	deleteColumn: function() {
-	  this.element.remove();
-	}
+    var self = this;
+    $.ajax({
+      url: baseUrl + '/column/' + self.id,
+      method: 'DELETE',
+      success: function(response){
+        self.element.remove();
+      }
+    });
+ }
 };
