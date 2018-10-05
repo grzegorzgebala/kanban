@@ -1,5 +1,5 @@
 
-function Card(id, description) {
+function Card(id, name) {
 	var self = this;
 	
 	this.id = id;
@@ -25,9 +25,9 @@ Card.prototype = {
 	removeCard: function() {
     var self = this;
     $.ajax({
-      url: baseUrl + '/card/' + self.id,
+     url: baseUrl + '/card/' + self.id,
       method: 'DELETE',
-      success: function(){
+      success: function() {
         self.$element.remove();
       }
     });
